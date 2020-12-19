@@ -75,13 +75,23 @@ app.post('/links', (req, res, next) => {
 /************************************************************/
 
 app.post('/signup', function (req, res) {
-  models.Users.create(req.body)
-    .then((err)=> {
-      if (err) {
-        res.status(500).send(err);
+  //check for existing
+  return models.Users.get({username: req.body.username})
+    .then(name => {
+      if (name) {
+        throw new Error('username already exists!');
       } else {
-        res.status(201).send();
+        return models.Users.create(req.body);
       }
+    })
+    .then((user) => {
+      res.redirect('/');
+    })
+    .error((err) => {
+      res.status(500).send(err);
+    })
+    .catch(() => {
+      res.redirect('/signup');
     });
 });
 
