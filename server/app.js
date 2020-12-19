@@ -22,6 +22,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/create', (req, res) => {
+  //check for auth
+  //if no auth, route to /login
   res.render('index');
 });
 
@@ -74,6 +76,7 @@ app.post('/links', (req, res, next) => {
 // Write your authentication routes here
 /************************************************************/
 
+//sign up a new user
 app.post('/signup', function (req, res) {
   //check for existing
   return models.Users.get({username: req.body.username})
@@ -93,6 +96,26 @@ app.post('/signup', function (req, res) {
     .catch(() => {
       res.redirect('/signup');
     });
+});
+
+//log in an existing user
+//Users.get (username) --> (id, username, password, salt)
+//Users.compare (args)
+//if match,
+app.post('/login', function (req, res) {
+  return models.Users.get({username: req.body.username})
+    .then(({password, salt}) => {
+      return models.Users.compare(req.body.password, password, salt);
+    })
+    .then((success) => {
+      if (!success) {
+        res.redirect('/login');
+      } else {
+        res.redirect('/');
+      }
+    })
+    .error((err) => res.status(500).send(err))
+    .catch(() => res.redirect('/login'));
 });
 
 /************************************************************/
