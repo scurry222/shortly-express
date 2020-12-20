@@ -11,10 +11,6 @@ const parseCookies = (req, res, next) => {
     });
     req.cookies = cookies;
   }
-  //this belongs in sessions:
-  //  else {
-  //   req.cookies = {shortlyid: hashUtils.createHash(hashUtils.createRandom32String())}
-  // }
   next();
 };
 

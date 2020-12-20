@@ -18,7 +18,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 
 app.get('/', (req, res) => {
+  //cookieParser success?
   res.render('index');
+  //fail
+  //render the login page
 });
 
 app.get('/create', (req, res) => {
@@ -111,6 +114,7 @@ app.post('/login', function (req, res) {
       if (!success) {
         res.redirect('/login');
       } else {
+
         res.redirect('/');
       }
     })
